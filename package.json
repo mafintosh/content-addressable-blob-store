@@ -1,0 +1,35 @@
+{
+  "name": "blob-object-store",
+  "version": "0.0.0",
+  "description": "Content addressable blob object store that is streams2",
+  "main": "index.js",
+  "dependencies": {
+    "end-of-stream": "^1.0.0",
+    "thunky": "^0.1.0"
+  },
+  "devDependencies": {
+    "concat-stream": "^1.4.6",
+    "tape": "^2.13.4"
+  },
+  "scripts": {
+    "test": "tape test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mafintosh/blob-object-store"
+  },
+  "keywords": [
+    "blob",
+    "object",
+    "store",
+    "content",
+    "addressable",
+    "streams2"
+  ],
+  "author": "Mathias Buus",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mafintosh/blob-object-store/issues"
+  },
+  "homepage": "https://github.com/mafintosh/blob-object-store"
+}
