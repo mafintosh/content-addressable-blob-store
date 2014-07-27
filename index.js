@@ -7,6 +7,8 @@ var eos = require('end-of-stream')
 var os = require('os')
 var thunky = require('thunky')
 
+var noop = function() {}
+
 var tmp = thunky(function(cb) {
   var dir = path.join(os.tmpDir(), 'blob-object-store')
   fs.mkdir(dir, function() {
@@ -111,6 +113,7 @@ module.exports = function(dir, algo) {
 
   that.delete =
   that.del = function(hash, cb) {
+    if (!cb) cb = noop
     fs.unlink(toPath(dir, hash), function(err) {
       if (err && err.code === 'ENOENT') return cb(null, false)
       if (err) return cb(err)
