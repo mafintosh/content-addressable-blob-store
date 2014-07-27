@@ -6,6 +6,9 @@ Streamable content addressable blob object store that is streams2 and implements
 npm install blob-object-store
 ```
 
+[![build status](http://img.shields.io/travis/mafintosh/blob-object-store.svg?style=flat)](http://travis-ci.org/mafintosh/blob-object-store)
+![dat](http://img.shields.io/badge/Development%20sponsored%20by-dat-green.svg?style=flat)
+
 ## Usage
 
 ``` js
