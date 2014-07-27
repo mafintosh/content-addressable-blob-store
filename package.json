@@ -1,7 +1,7 @@
 {
   "name": "blob-object-store",
   "version": "0.0.0",
-  "description": "Content addressable blob object store that is streams2",
+  "description": "Streamable content addressable blob object store that is streams2 and implements the blob store interface",
   "main": "index.js",
   "dependencies": {
     "end-of-stream": "^1.0.0",
