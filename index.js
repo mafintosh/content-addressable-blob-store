@@ -5,16 +5,10 @@ var stream = require('stream')
 var util = require('util')
 var eos = require('end-of-stream')
 var os = require('os')
+var mkdirp = require('mkdirp')
 var thunky = require('thunky')
 
 var noop = function() {}
-
-var tmp = thunky(function(cb) {
-  var dir = path.join(os.tmpDir(), 'blob-object-store')
-  fs.mkdir(dir, function() {
-    cb(dir)
-  })
-})
 
 var SIGNAL_FLUSH = new Buffer([0])
 
@@ -22,13 +16,16 @@ var toPath = function(base, hash) {
   return path.join(base, hash.slice(0, 2), hash.slice(2))
 }
 
-var Writer = function(dir, algo) {
-  this.tmp = null
-  this.ws = null
+var Writer = function(dir, algo, init) {
   this.hash = null
-  this.directory = dir
   this.destroyed = false
-  this.digest = crypto.createHash(algo)
+
+  this._tmp = null
+  this._ws = null
+  this._directory = dir
+  this._digest = crypto.createHash(algo)
+  this._init = init
+
   stream.Writable.call(this)
 }
 
@@ -36,26 +33,26 @@ util.inherits(Writer, stream.Writable)
 
 Writer.prototype._flush = function(cb) {
   var self = this
-  var hash = this.hash = this.digest.digest('hex')
-  var dir = path.join(this.directory, hash.slice(0, 2))
+  var hash = this.hash = this._digest.digest('hex')
+  var dir = path.join(this._directory, hash.slice(0, 2))
 
   fs.mkdir(dir, function() {
-    fs.rename(self.tmp, toPath(self.directory, hash), cb)
+    fs.rename(self._tmp, toPath(self._directory, hash), cb)
   })
 }
 
-Writer.prototype._init = function(data, enc, cb) {
+Writer.prototype._setup = function(data, enc, cb) {
   var self = this
   var destroy = function(err) {
     self.destroy(err)
   }
 
-  tmp(function(dir) {
+  this._init(function(dir) {
     if (self.destroyed) return cb(new Error('stream destroyed'))
-    self.tmp = path.join(dir, Date.now()+'-'+Math.random().toString().slice(2))
-    self.ws = fs.createWriteStream(self.tmp)
-    self.ws.on('error', destroy)
-    self.ws.on('close', destroy)
+    self._tmp = path.join(dir, Date.now()+'-'+Math.random().toString().slice(2))
+    self._ws = fs.createWriteStream(self._tmp)
+    self._ws.on('error', destroy)
+    self._ws.on('close', destroy)
     self._write(data, enc, cb)
   })
 }
@@ -63,16 +60,16 @@ Writer.prototype._init = function(data, enc, cb) {
 Writer.prototype.destroy = function(err) {
   if (this.destroyed) return
   this.destroyed = true
-  if (this.ws) this.ws.destroy()
+  if (this.ws) this._ws.destroy()
   if (err) this.emit('error', err)
   this.emit('close')
 }
 
 Writer.prototype._write = function(data, enc, cb) {
-  if (!this.tmp) return this._init(data, enc, cb)
+  if (!this._tmp) return this._setup(data, enc, cb)
   if (data === SIGNAL_FLUSH) return this._flush(cb)
-  this.digest.update(data)
-  this.ws.write(data, enc, cb)
+  this._digest.update(data)
+  this._ws.write(data, enc, cb)
 }
 
 Writer.prototype.end = function(data, enc, cb) {
@@ -87,8 +84,17 @@ module.exports = function(dir, algo) {
   if (!algo) algo = 'sha256'
   var that = {}
 
+  var init = thunky(function(cb) {
+    var tmp = path.join(os.tmpDir(), 'blob-object-store')
+    mkdirp(tmp, function() {
+      mkdirp(dir, function() {
+        cb(dir)
+      })
+    })
+  })
+
   that.createWriteStream = function(cb) {
-    var ws = new Writer(dir, algo)
+    var ws = new Writer(dir, algo, init)
     if (!cb) return ws
 
     eos(ws, function(err) {
