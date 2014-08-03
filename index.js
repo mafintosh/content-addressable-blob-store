@@ -37,8 +37,10 @@ Writer.prototype._flush = function(cb) {
   var hash = this.hash = this._digest.digest('hex')
   var dir = path.join(this._directory, hash.slice(0, 2))
 
-  fs.mkdir(dir, function() {
-    fs.rename(self._tmp, toPath(self._directory, hash), cb)
+  self._ws.end(function() {
+    fs.mkdir(dir, function() {
+      fs.rename(self._tmp, toPath(self._directory, hash), cb)
+    })
   })
 }
 
