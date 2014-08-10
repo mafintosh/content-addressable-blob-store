@@ -52,12 +52,12 @@ tape('add file + read file', function(t) {
   })
 })
 
-tape('del file', function(t) {
+tape('remove file', function(t) {
   var w = store.createWriteStream()
   w.write('hello')
   w.write('world')
   w.end(function() {
-    store.del(w.hash, function(err, deleted) {
+    store.remove(w.hash, function(err, deleted) {
       t.notOk(err, 'no err')
       t.ok(deleted, 'was deleted')
       t.end()

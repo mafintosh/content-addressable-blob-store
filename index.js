@@ -121,8 +121,7 @@ module.exports = function(dir, algo) {
     })
   }
 
-  that.delete =
-  that.del = function(hash, cb) {
+  that.remove = function(hash, cb) {
     if (!cb) cb = noop
     fs.unlink(toPath(dir, hash), function(err) {
       if (err && err.code === 'ENOENT') return cb(null, false)

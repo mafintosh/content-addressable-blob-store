@@ -45,9 +45,9 @@ or add a callback which will be called with `callback(err, hash)`
 
 Check if an hash exists in the blob store. Callback is called with `callback(err, exists)`
 
-#### `store.del(hash, [cb])`
+#### `store.remove(hash, [cb])`
 
-Delete a blob from the store. Callback is called with `callback(err, wasDeleted)`
+Remove a blob from the store. Callback is called with `callback(err, wasDeleted)`
 
 ## License
 
