@@ -1,18 +1,18 @@
-# blob-object-store
+# fs-blob-store
 
-Streamable content addressable blob object store that is streams2 and implements the blob store interface
+Streamable content addressable blob object store that is streams2 and implements the blob store interface on top of the fs module
 
 ``` js
-npm install blob-object-store
+npm install fs-blob-store
 ```
 
-[![build status](http://img.shields.io/travis/mafintosh/blob-object-store.svg?style=flat)](http://travis-ci.org/mafintosh/blob-object-store)
+[![build status](http://img.shields.io/travis/mafintosh/fs-blob-store.svg?style=flat)](http://travis-ci.org/mafintosh/fs-blob-store)
 ![dat](http://img.shields.io/badge/Development%20sponsored%20by-dat-green.svg?style=flat)
 
 ## Usage
 
 ``` js
-var blobs = require('blob-object-store')
+var blobs = require('fs-blob-store')
 var store = blobs('./data')
 
 var w = store.createWriteStream()
