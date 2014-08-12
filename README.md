@@ -1,6 +1,8 @@
 # fs-blob-store
 
-Streamable content addressable blob object store that is streams2 and implements the blob store interface on top of the fs module
+Streamable content addressable blob object store that is streams2 and implements the blob store interface on top of the fs module.
+
+Conforms to the [abstract-blob-store](https://github.com/maxogden/abstract-blob-store) API and passes it's test suite.
 
 ``` js
 npm install fs-blob-store
@@ -13,7 +15,7 @@ npm install fs-blob-store
 
 ``` js
 var blobs = require('fs-blob-store')
-var store = blobs('./data')
+var store = blobs({path: './data'})
 
 var w = store.createWriteStream()
 
@@ -22,32 +24,34 @@ w.write('world\n')
 
 w.end(function() {
   console.log('blob written: '+w.hash)
-  store.createReadStream(w.hash).pipe(process.stdout)
+  store.createReadStream(w).pipe(process.stdout)
 })
 ```
 
 ## API
 
-#### `var store = blobs(dir)`
+#### `var store = blobs(opts)`
 
-Creates a new instance. `dir` will be created if it doesn't exist.
+Creates a new instance. Opts should have a `path` property to where the blobs should live on the fs. The directory will be created if it doesn't exist. If not supplied it will default to `path.join(process.cwd(), 'blobs')`
 
-#### `var readStream = store.createReadStream(hash)`
+You can also specify a node `crytpo` module hashing algorithm to use using the `algo` key in options. The default is `sha256`.
 
-Open a read stream to a blob
+#### `var readStream = store.createReadStream(opts)`
+
+Open a read stream to a blob. `opts` must have a `hash` key with the hash of the blob you want to read.
 
 #### `var writeStream = store.createWriteStream([cb])`
 
 Add a new blob to the store. Use `writeStream.hash` to get the hash after the `finish` event has fired
-or add a callback which will be called with `callback(err, hash)`
+or add a callback which will be called with `callback(err, metadata)`.
 
-#### `store.exists(hash, cb)`
+#### `store.exists(metadata, cb)`
 
-Check if an hash exists in the blob store. Callback is called with `callback(err, exists)`
+Check if an blob exists in the blob store. `metadata` must have a `hash` property. Callback is called with `callback(err, exists)`
 
-#### `store.remove(hash, [cb])`
+#### `store.remove(metadata, [cb])`
 
-Remove a blob from the store. Callback is called with `callback(err, wasDeleted)`
+Remove a blob from the store. `metadata` must have a `hash` property. Callback is called with `callback(err, wasDeleted)`
 
 ## License
 

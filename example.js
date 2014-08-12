@@ -1,5 +1,5 @@
 var blobs = require('./')
-var store = blobs('./data')
+var store = blobs({path: './data'})
 
 var w = store.createWriteStream()
 
@@ -8,5 +8,5 @@ w.write('world\n')
 
 w.end(function() {
   console.log('blob written: '+w.hash)
-  store.createReadStream(w.hash).pipe(process.stdout)
+  store.createReadStream(w).pipe(process.stdout)
 })

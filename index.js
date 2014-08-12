@@ -84,12 +84,19 @@ Writer.prototype.end = function(data, enc, cb) {
   stream.Writable.prototype.end.call(this, cb)
 }
 
-module.exports = function(dir, algo) {
+module.exports = function(opts) {
+  if (!opts) opts = {}
+  
+  var algo = opts.algo
   if (!algo) algo = 'sha256'
+  
+  var dir = opts.dir || opts.path
+  if (!dir) dir = path.join(process.cwd(), 'blobs')
+  
   var that = {}
 
   var init = thunky(function(cb) {
-    var tmp = path.join(os.tmpDir(), 'blob-object-store')
+    var tmp = path.join(os.tmpDir(), 'fs-blob-store')
     mkdirp(tmp, function() {
       mkdirp(dir, function() {
         cb(dir)
@@ -97,33 +104,35 @@ module.exports = function(dir, algo) {
     })
   })
 
-  that.createWriteStream = function(cb) {
+  that.createWriteStream = function(opts, cb) {
+    // dont use opts
     var ws = new Writer(dir, algo, init)
     if (!cb) return ws
 
     eos(ws, function(err) {
       if (err) return cb(err)
-      cb(null, ws.hash, ws.length)
+      ws.size = ws.length
+      cb(null, ws)
     })
 
     return ws
   }
 
-  that.createReadStream = function(hash) {
-    return fs.createReadStream(toPath(dir, hash))
+  that.createReadStream = function(opts) {
+    return fs.createReadStream(toPath(dir, opts.hash))
   }
 
-  that.exists = function(hash, cb) {
-    fs.stat(toPath(dir, hash), function(err, stat) {
+  that.exists = function(opts, cb) {
+    fs.stat(toPath(dir, opts.hash), function(err, stat) {
       if (err && err.code === 'ENOENT') return cb(null, false)
       if (err) return cb(err)
       cb(null, true)
     })
   }
 
-  that.remove = function(hash, cb) {
+  that.remove = function(opts, cb) {
     if (!cb) cb = noop
-    fs.unlink(toPath(dir, hash), function(err) {
+    fs.unlink(toPath(dir, opts.hash), function(err) {
       if (err && err.code === 'ENOENT') return cb(null, false)
       if (err) return cb(err)
       cb(null, true)
