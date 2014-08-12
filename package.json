@@ -18,7 +18,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/mafintosh/blob-object-store"
+    "url": "https://github.com/mafintosh/fs-blob-store"
   },
   "keywords": [
     "blob",
@@ -31,7 +31,7 @@
   "author": "Mathias Buus",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/mafintosh/blob-object-store/issues"
+    "url": "https://github.com/mafintosh/fs-blob-store/issues"
   },
-  "homepage": "https://github.com/mafintosh/blob-object-store"
+  "homepage": "https://github.com/mafintosh/fs-blob-store"
 }
