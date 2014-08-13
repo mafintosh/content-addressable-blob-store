@@ -105,7 +105,8 @@ module.exports = function(opts) {
   })
 
   that.createWriteStream = function(opts, cb) {
-    // dont use opts
+    if (typeof opts === 'function') return that.createWriteStream(null, opts)
+
     var ws = new Writer(dir, algo, init)
     if (!cb) return ws
 
