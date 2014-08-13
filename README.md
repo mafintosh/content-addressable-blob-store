@@ -1,6 +1,6 @@
 # fs-blob-store
 
-Streamable content addressable blob object store that is streams2 and implements the blob store interface on top of the fs module.
+Streamable content addressable [blob](http://en.wikipedia.org/wiki/Binary_large_object) object store that is streams2 and implements the blob store interface on top of the fs module.
 
 Conforms to the [abstract-blob-store](https://github.com/maxogden/abstract-blob-store) API and passes it's test suite.
 
