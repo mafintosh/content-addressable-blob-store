@@ -17,7 +17,7 @@ var toPath = function(base, hash) {
 }
 
 var Writer = function(dir, algo, init) {
-  this.hash = null
+  this.key = null
   this.length = 0
   this.destroyed = false
 
@@ -34,7 +34,7 @@ util.inherits(Writer, stream.Writable)
 
 Writer.prototype._flush = function(cb) {
   var self = this
-  var hash = this.hash = this._digest.digest('hex')
+  var hash = this.key = this._digest.digest('hex')
   var dir = path.join(this._directory, hash.slice(0, 2))
 
   self._ws.end(function() {
@@ -120,11 +120,11 @@ module.exports = function(opts) {
   }
 
   that.createReadStream = function(opts) {
-    return fs.createReadStream(toPath(dir, opts.hash))
+    return fs.createReadStream(toPath(dir, opts.key))
   }
 
   that.exists = function(opts, cb) {
-    fs.stat(toPath(dir, opts.hash), function(err, stat) {
+    fs.stat(toPath(dir, opts.key), function(err, stat) {
       if (err && err.code === 'ENOENT') return cb(null, false)
       if (err) return cb(err)
       cb(null, true)
@@ -133,7 +133,7 @@ module.exports = function(opts) {
 
   that.remove = function(opts, cb) {
     if (!cb) cb = noop
-    fs.unlink(toPath(dir, opts.hash), function(err) {
+    fs.unlink(toPath(dir, opts.key), function(err) {
       if (err && err.code === 'ENOENT') return cb(null, false)
       if (err) return cb(err)
       cb(null, true)
