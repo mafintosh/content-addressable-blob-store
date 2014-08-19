@@ -23,7 +23,7 @@ w.write('hello ')
 w.write('world\n')
 
 w.end(function() {
-  console.log('blob written: '+w.hash)
+  console.log('blob written: '+w.key)
   store.createReadStream(w).pipe(process.stdout)
 })
 ```
@@ -34,24 +34,24 @@ w.end(function() {
 
 Creates a new instance. Opts should have a `path` property to where the blobs should live on the fs. The directory will be created if it doesn't exist. If not supplied it will default to `path.join(process.cwd(), 'blobs')`
 
-You can also specify a node `crytpo` module hashing algorithm to use using the `algo` key in options. The default is `sha256`.
+You can also specify a node `crypto` module hashing algorithm to use using the `algo` key in options. The default is `sha256`.
 
 #### `var readStream = store.createReadStream(opts)`
 
-Open a read stream to a blob. `opts` must have a `hash` key with the hash of the blob you want to read.
+Open a read stream to a blob. `opts` must have a `key` key with the hash of the blob you want to read.
 
 #### `var writeStream = store.createWriteStream([cb])`
 
-Add a new blob to the store. Use `writeStream.hash` to get the hash after the `finish` event has fired
+Add a new blob to the store. Use `writeStream.key` to get the hash after the `finish` event has fired
 or add a callback which will be called with `callback(err, metadata)`.
 
 #### `store.exists(metadata, cb)`
 
-Check if an blob exists in the blob store. `metadata` must have a `hash` property. Callback is called with `callback(err, exists)`
+Check if an blob exists in the blob store. `metadata` must have a `key` property. Callback is called with `callback(err, exists)`
 
 #### `store.remove(metadata, [cb])`
 
-Remove a blob from the store. `metadata` must have a `hash` property. Callback is called with `callback(err, wasDeleted)`
+Remove a blob from the store. `metadata` must have a `key` property. Callback is called with `callback(err, wasDeleted)`
 
 ## License
 
