@@ -18,7 +18,7 @@ var toPath = function(base, hash) {
 
 var Writer = function(dir, algo, init) {
   this.key = null
-  this.length = 0
+  this.size = 0
   this.destroyed = false
 
   this._tmp = null
@@ -71,7 +71,7 @@ Writer.prototype.destroy = function(err) {
 Writer.prototype._write = function(data, enc, cb) {
   if (!this._tmp) return this._setup(data, enc, cb)
   if (data === SIGNAL_FLUSH) return this._flush(cb)
-  this.length += data.length
+  this.size += data.length
   this._digest.update(data)
   this._ws.write(data, enc, cb)
 }
@@ -112,8 +112,10 @@ module.exports = function(opts) {
 
     eos(ws, function(err) {
       if (err) return cb(err)
-      ws.size = ws.length
-      cb(null, ws)
+      cb(null, {
+        key: ws.key,
+        size: ws.size
+      })
     })
 
     return ws
