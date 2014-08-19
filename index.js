@@ -122,7 +122,7 @@ module.exports = function(opts) {
   }
 
   that.createReadStream = function(opts) {
-    return fs.createReadStream(toPath(dir, opts.key))
+    return fs.createReadStream(toPath(dir, opts.key || opts.hash))
   }
 
   that.exists = function(opts, cb) {
