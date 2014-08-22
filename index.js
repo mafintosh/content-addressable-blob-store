@@ -13,7 +13,7 @@ var noop = function() {}
 var SIGNAL_FLUSH = new Buffer([0])
 
 var toPath = function(base, hash) {
-  return path.join(base, hash.slice(0, 2), hash.slice(2))
+  return hash ? path.join(base, hash.slice(0, 2), hash.slice(2)) : base
 }
 
 var Writer = function(dir, algo, init) {
