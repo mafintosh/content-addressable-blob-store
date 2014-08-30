@@ -1,20 +1,20 @@
-# fs-blob-store
+# content-addressable-blob-store
 
 Streamable content addressable [blob](http://en.wikipedia.org/wiki/Binary_large_object) object store that is streams2 and implements the blob store interface on top of the fs module.
 
 Conforms to the [abstract-blob-store](https://github.com/maxogden/abstract-blob-store) API and passes it's test suite.
 
 ``` js
-npm install fs-blob-store
+npm install content-addressable-blob-store
 ```
 
-[![build status](http://img.shields.io/travis/mafintosh/fs-blob-store.svg?style=flat)](http://travis-ci.org/mafintosh/fs-blob-store)
+[![build status](http://img.shields.io/travis/mafintosh/content-addressable-blob-store.svg?style=flat)](http://travis-ci.org/mafintosh/content-addressable-blob-store)
 ![dat](http://img.shields.io/badge/Development%20sponsored%20by-dat-green.svg?style=flat)
 
 ## Usage
 
 ``` js
-var blobs = require('fs-blob-store')
+var blobs = require('content-addressable-blob-store')
 var store = blobs({path: './data'})
 
 var w = store.createWriteStream()
