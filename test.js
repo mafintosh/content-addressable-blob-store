@@ -6,7 +6,7 @@ var rimraf = require('rimraf')
 var abstractBlobTests = require('abstract-blob-store/tests')
 
 var blobs = require('./')
-var blobPath = path.join(os.tmpdir(), 'fs-blob-store-tests')
+var blobPath = path.join((os.tmpdir || os.tmpDir)(), 'fs-blob-store-tests')
 
 var common = {
   setup: function(t, cb) {
