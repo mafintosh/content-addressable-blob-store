@@ -105,6 +105,7 @@ module.exports = function(opts) {
   })
 
   that.createWriteStream = function(opts, cb) {
+    if (typeof opts === 'string') opts = {key:opts}
     if (typeof opts === 'function') return that.createWriteStream(null, opts)
 
     var ws = new Writer(dir, algo, init)
@@ -122,10 +123,12 @@ module.exports = function(opts) {
   }
 
   that.createReadStream = function(opts) {
+    if (typeof opts === 'string') opts = {key:opts}
     return fs.createReadStream(toPath(dir, opts.key || opts.hash))
   }
 
   that.exists = function(opts, cb) {
+    if (typeof opts === 'string') opts = {key:opts}
     fs.stat(toPath(dir, opts.key), function(err, stat) {
       if (err && err.code === 'ENOENT') return cb(null, false)
       if (err) return cb(err)
@@ -135,6 +138,7 @@ module.exports = function(opts) {
 
   that.remove = function(opts, cb) {
     if (!cb) cb = noop
+    if (typeof opts === 'string') opts = {key:opts}
     fs.unlink(toPath(dir, opts.key), function(err) {
       if (err && err.code === 'ENOENT') return cb(null, false)
       if (err) return cb(err)
