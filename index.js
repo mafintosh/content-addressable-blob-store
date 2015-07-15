@@ -85,7 +85,7 @@ Writer.prototype.end = function(data, enc, cb) {
 }
 
 module.exports = function(opts) {
-  if (typeof opts === 'string') opts = {path: path}
+  if (typeof opts === 'string') opts = {path: opts}
   if (!opts) opts = {}
 
   var algo = opts.algo
