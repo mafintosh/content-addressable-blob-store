@@ -85,18 +85,19 @@ Writer.prototype.end = function(data, enc, cb) {
 }
 
 module.exports = function(opts) {
+  if (typeof opts === 'string') opts = {path: path}
   if (!opts) opts = {}
-  
+
   var algo = opts.algo
   if (!algo) algo = 'sha256'
-  
+
   var dir = opts.dir || opts.path
   if (!dir) dir = path.join(process.cwd(), 'blobs')
-  
+
   var that = {}
 
   var init = thunky(function(cb) {
-    var tmp = path.join(os.tmpDir(), 'fs-blob-store')
+    var tmp = path.join(os.tmpDir(), 'cabs')
     mkdirp(tmp, function() {
       mkdirp(dir, function() {
         cb(dir)

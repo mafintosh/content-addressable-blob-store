@@ -17,7 +17,7 @@ npm install content-addressable-blob-store
 
 ``` js
 var blobs = require('content-addressable-blob-store')
-var store = blobs({path: './data'})
+var store = blobs('./data')
 
 var w = store.createWriteStream()
 
@@ -37,6 +37,7 @@ w.end(function() {
 Creates a new instance. Opts should have a `path` property to where the blobs should live on the fs. The directory will be created if it doesn't exist. If not supplied it will default to `path.join(process.cwd(), 'blobs')`
 
 You can also specify a node `crypto` module hashing algorithm to use using the `algo` key in options. The default is `sha256`.
+If you pass a string instead of an options map it will be used as the `path` as well.
 
 #### `var readStream = store.createReadStream(opts)`
 
