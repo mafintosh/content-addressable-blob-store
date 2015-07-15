@@ -63,7 +63,7 @@ Writer.prototype._setup = function(data, enc, cb) {
 Writer.prototype.destroy = function(err) {
   if (this.destroyed) return
   this.destroyed = true
-  if (this.ws) this._ws.destroy()
+  if (this._ws) this._ws.destroy()
   if (err) this.emit('error', err)
   this.emit('close')
 }
