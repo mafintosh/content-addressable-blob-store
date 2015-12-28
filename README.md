@@ -41,7 +41,7 @@ If you pass a string instead of an options map it will be used as the `path` as 
 
 #### `var readStream = store.createReadStream(opts)`
 
-Open a read stream to a blob. `opts` must have a `key` key with the hash of the blob you want to read.
+Open a read stream to a blob. `opts` must have a `key` key with the hash of the blob you want to read. `opts` can optionally contain a `start` or `end` key if you only want part of the blob.
 
 #### `var writeStream = store.createWriteStream([cb])`
 

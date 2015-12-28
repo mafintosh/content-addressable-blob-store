@@ -125,7 +125,7 @@ module.exports = function(opts) {
 
   that.createReadStream = function(opts) {
     if (typeof opts === 'string') opts = {key:opts}
-    return fs.createReadStream(toPath(dir, opts.key || opts.hash))
+    return fs.createReadStream(toPath(dir, opts.key || opts.hash), opts)
   }
 
   that.exists = function(opts, cb) {

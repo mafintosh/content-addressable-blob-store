@@ -38,3 +38,22 @@ test('remove file', function(t) {
     })
   })
 })
+
+test('seek blob', function(t) {
+  common.setup(t, function(err, store) {
+    var w = store.createWriteStream()
+    w.write('hello')
+    w.write('world')
+    w.end(function() {
+      var buff = ""
+      var blob = store.createReadStream({ key: w.key, start: 5 })
+      blob.on('data', function (data) { buff += data })
+      blob.on('end', function () {
+        t.equal(buff, 'world')
+        common.teardown(t, null, null, function(err) {
+          t.end()
+        })
+      })
+    })
+  })
+})
