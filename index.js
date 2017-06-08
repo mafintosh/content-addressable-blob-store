@@ -130,12 +130,10 @@ module.exports = function(opts) {
 
   that.exists = function(opts, cb) {
     if (typeof opts === 'string') opts = {key:opts}
-    var keyPath = toPath(dir, opts.key)
-    fs.stat(keyPath, function(err, stat) {
+    fs.stat(toPath(dir, opts.key), function(err, stat) {
       if (err && err.code === 'ENOENT') return cb(null, false)
       if (err) return cb(err)
-      stat.path = keyPath
-      cb(null, stat)
+      cb(null, true)
     })
   }
 
