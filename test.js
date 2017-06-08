@@ -1,5 +1,6 @@
 var os = require('os')
 var path = require('path')
+var fs = require('fs')
 
 var test = require('tape')
 var rimraf = require('rimraf')
@@ -52,6 +53,32 @@ test('seek blob', function(t) {
         t.equal(buff, 'world')
         common.teardown(t, null, null, function(err) {
           t.end()
+        })
+      })
+    })
+  })
+})
+
+
+test('resolve blob', function(t) {
+  common.setup(t, function(err, store) {
+    var w = store.createWriteStream()
+    w.write('hello')
+    w.write('world')
+    w.end(function() {
+      var buff = ""
+      store.resolve({key: w.key}, function (err, path, stat) {
+        t.error(err, 'no error')
+        t.notEqual(path, false, 'path should not be false')
+        console.log(path)
+        t.notEqual(stat, null, 'path is not null')
+        t.true(stat instanceof fs.Stats, 'stat is instanceof Stats')
+        store.resolve('foo', function (err, path, stat) {
+          t.equal(path, false, 'path should be false for missing key')
+          t.equal(stat, null, 'path is null for missing key')
+          common.teardown(t, null, null, function(err) {
+            t.end()
+          })
         })
       })
     })

@@ -147,5 +147,15 @@ module.exports = function(opts) {
     })
   }
 
+  that.resolve = function(opts, cb) {
+    if (typeof opts === 'string') opts = {key:opts}
+    var path = toPath(dir, opts.key)
+    fs.stat(path, function(err, stat) {
+      if (err && err.code === 'ENOENT') return cb(null, false, null)
+      if (err) return cb(err)
+      cb(null, path, stat)
+    })
+  }
+
   return that
 }
