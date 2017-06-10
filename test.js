@@ -70,7 +70,6 @@ test('resolve blob', function(t) {
       store.resolve({key: w.key}, function (err, path, stat) {
         t.error(err, 'no error')
         t.notEqual(path, false, 'path should not be false')
-        console.log(path)
         t.notEqual(stat, null, 'path is not null')
         t.true(stat instanceof fs.Stats, 'stat is instanceof Stats')
         store.resolve('foo', function (err, path, stat) {
