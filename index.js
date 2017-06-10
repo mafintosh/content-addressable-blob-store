@@ -100,7 +100,7 @@ module.exports = function(opts) {
     var tmp = path.join(os.tmpDir(), 'cabs')
     mkdirp(tmp, function() {
       mkdirp(dir, function() {
-        cb(dir)
+        cb(tmp)
       })
     })
   })
