@@ -52,9 +52,14 @@ or add a callback which will be called with `callback(err, metadata)`.
 
 Check if an blob exists in the blob store. `metadata` must have a `key` property. Callback is called with `callback(err, exists)`
 
+
 #### `store.remove(metadata, [cb])`
 
 Remove a blob from the store. `metadata` must have a `key` property. Callback is called with `callback(err, wasDeleted)`
+
+#### `store.resolve(metadata, cb)`
+
+Check if an blob exists in the blob store and return its `path` and `stat` object. `metadata` must have a `key` property. Callback is called with `callback(err, path, stat)` where `path` is the path string to the file on disk and `stat` is an instance of [fs.Stats](https://nodejs.org/api/fs.html#fs_class_fs_stats).  If the `key` does does not exist in the store, `path` will be `false` and `stat` will be `null`.
 
 ## License
 
