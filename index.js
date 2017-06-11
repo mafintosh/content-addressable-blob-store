@@ -97,7 +97,7 @@ module.exports = function(opts) {
   var that = {}
 
   var init = thunky(function(cb) {
-    var tmp = path.join(os.tmpDir(), 'cabs')
+    var tmp = path.join((os.tmpdir || os.tmpDir)(), 'cabs')
     mkdirp(tmp, function() {
       mkdirp(dir, function() {
         cb(tmp)
