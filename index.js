@@ -94,10 +94,12 @@ module.exports = function(opts) {
   var dir = opts.dir || opts.path
   if (!dir) dir = path.join(process.cwd(), 'blobs')
 
+  var tmpdir = opts.tmpdir || (os.tmpdir || os.tmpDir)()
+
   var that = {}
 
   var init = thunky(function(cb) {
-    var tmp = path.join((os.tmpdir || os.tmpDir)(), 'cabs')
+    var tmp = path.join(tmpdir, 'cabs')
     mkdirp(tmp, function() {
       mkdirp(dir, function() {
         cb(tmp)

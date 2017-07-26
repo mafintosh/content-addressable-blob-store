@@ -39,6 +39,8 @@ Creates a new instance. Opts should have a `path` property to where the blobs sh
 You can also specify a node `crypto` module hashing algorithm to use using the `algo` key in options. The default is `sha256`.
 If you pass a string instead of an options map it will be used as the `path` as well.
 
+The `tmpdir` option can be used to specify the directory where files are stored temporarily during writing. The default is `os.tmpdir()`.
+
 #### `var readStream = store.createReadStream(opts)`
 
 Open a read stream to a blob. `opts` must have a `key` key with the hash of the blob you want to read. `opts` can optionally contain a `start` or `end` key if you only want part of the blob.
