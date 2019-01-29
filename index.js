@@ -7,7 +7,7 @@ var eos = require('end-of-stream')
 var os = require('os')
 var mkdirp = require('mkdirp')
 var thunky = require('thunky')
-
+var mv = require('mv')
 var noop = function() {}
 
 var SIGNAL_FLUSH = new Buffer([0])
@@ -39,7 +39,7 @@ Writer.prototype._flush = function(cb) {
 
   self._ws.end(function() {
     fs.mkdir(dir, function() {
-      fs.rename(self._tmp, toPath(self._directory, hash), cb)
+      mv(self._tmp, toPath(self._directory, hash), cb)
     })
   })
 }
