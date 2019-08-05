@@ -94,7 +94,7 @@ module.exports = function (opts) {
   var dir = opts.dir || opts.path
   if (!dir) dir = path.join(process.cwd(), 'blobs')
 
-  var tmpdir = (opts.tmpdir || os.tmpdir)()
+  var tmpdir = (opts.tmpdir || os.tmpdir())
 
   var that = {}
 
