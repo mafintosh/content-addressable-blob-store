@@ -24,7 +24,7 @@ var w = store.createWriteStream()
 w.write('hello ')
 w.write('world\n')
 
-w.end(function() {
+w.end(function () {
   console.log('blob written: '+w.key)
   store.createReadStream(w).pipe(process.stdout)
 })
