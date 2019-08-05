@@ -19,7 +19,7 @@
   },
   "scripts": {
     "test": "tape test.js",
-    "lint": "standard && standard-markdown README.md"
+    "lint": "standard ; standard-markdown README.md"
   },
   "repository": {
     "type": "git",
