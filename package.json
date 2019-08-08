@@ -10,7 +10,7 @@
     "thunky": "^1.0.3"
   },
   "devDependencies": {
-    "abstract-blob-store": "^3.2.0",
+    "abstract-blob-store": "^3.3.5",
     "concat-stream": "^2.0.0",
     "rimraf": "^2.2.8",
     "standard": "^13.1.0",
