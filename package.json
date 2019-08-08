@@ -1,6 +1,6 @@
 {
   "name": "content-addressable-blob-store",
-  "version": "4.6.0",
+  "version": "5.0.0",
   "description": "Streamable content addressable blob object store that is streams2 and implements the blob store interface on top of the fs module",
   "main": "index.js",
   "dependencies": {
