@@ -8,15 +8,15 @@ var os = require('os')
 var mkdirp = require('mkdirp')
 var thunky = require('thunky')
 
-var noop = function() {}
+var noop = function () {}
 
-var SIGNAL_FLUSH = new Buffer([0])
+var SIGNAL_FLUSH = Buffer.from([0])
 
-var toPath = function(base, hash) {
+var toPath = function (base, hash) {
   return hash ? path.join(base, hash.slice(0, 2), hash.slice(2)) : base
 }
 
-var Writer = function(dir, algo, init) {
+var Writer = function (dir, algo, init) {
   this.key = null
   this.size = 0
   this.destroyed = false
@@ -32,27 +32,27 @@ var Writer = function(dir, algo, init) {
 
 util.inherits(Writer, stream.Writable)
 
-Writer.prototype._flush = function(cb) {
+Writer.prototype._flush = function (cb) {
   var self = this
   var hash = this.key = this._digest.digest('hex')
   var dir = path.join(this._directory, hash.slice(0, 2))
 
-  self._ws.end(function() {
-    fs.mkdir(dir, function() {
+  self._ws.end(function () {
+    fs.mkdir(dir, function () {
       fs.rename(self._tmp, toPath(self._directory, hash), cb)
     })
   })
 }
 
-Writer.prototype._setup = function(data, enc, cb) {
+Writer.prototype._setup = function (data, enc, cb) {
   var self = this
-  var destroy = function(err) {
+  var destroy = function (err) {
     self.destroy(err)
   }
 
-  this._init(function(dir) {
+  this._init(function (dir) {
     if (self.destroyed) return cb(new Error('stream destroyed'))
-    self._tmp = path.join(dir, Date.now()+'-'+Math.random().toString().slice(2))
+    self._tmp = path.join(dir, Date.now() + '-' + Math.random().toString().slice(2))
     self._ws = fs.createWriteStream(self._tmp)
     self._ws.on('error', destroy)
     self._ws.on('close', destroy)
@@ -60,7 +60,7 @@ Writer.prototype._setup = function(data, enc, cb) {
   })
 }
 
-Writer.prototype.destroy = function(err) {
+Writer.prototype.destroy = function (err) {
   if (this.destroyed) return
   this.destroyed = true
   if (this._ws) this._ws.destroy()
@@ -68,7 +68,7 @@ Writer.prototype.destroy = function(err) {
   this.emit('close')
 }
 
-Writer.prototype._write = function(data, enc, cb) {
+Writer.prototype._write = function (data, enc, cb) {
   if (!this._tmp) return this._setup(data, enc, cb)
   if (data === SIGNAL_FLUSH) return this._flush(cb)
   this.size += data.length
@@ -76,7 +76,7 @@ Writer.prototype._write = function(data, enc, cb) {
   this._ws.write(data, enc, cb)
 }
 
-Writer.prototype.end = function(data, enc, cb) {
+Writer.prototype.end = function (data, enc, cb) {
   if (typeof data === 'function') return this.end(null, null, data)
   if (typeof enc === 'function') return this.end(data, null, enc)
   if (data) this.write(data)
@@ -84,8 +84,8 @@ Writer.prototype.end = function(data, enc, cb) {
   stream.Writable.prototype.end.call(this, cb)
 }
 
-module.exports = function(opts) {
-  if (typeof opts === 'string') opts = {path: opts}
+module.exports = function (opts) {
+  if (typeof opts === 'string') opts = { path: opts }
   if (!opts) opts = {}
 
   var algo = opts.algo
@@ -94,27 +94,27 @@ module.exports = function(opts) {
   var dir = opts.dir || opts.path
   if (!dir) dir = path.join(process.cwd(), 'blobs')
 
-  var tmpdir = opts.tmpdir || (os.tmpdir || os.tmpDir)()
+  var tmpdir = (opts.tmpdir || os.tmpdir())
 
   var that = {}
 
-  var init = thunky(function(cb) {
+  var init = thunky(function (cb) {
     var tmp = path.join(tmpdir, 'cabs')
-    mkdirp(tmp, function() {
-      mkdirp(dir, function() {
+    mkdirp(tmp, function () {
+      mkdirp(dir, function () {
         cb(tmp)
       })
     })
   })
 
-  that.createWriteStream = function(opts, cb) {
-    if (typeof opts === 'string') opts = {key:opts}
+  that.createWriteStream = function (opts, cb) {
+    if (typeof opts === 'string') opts = { key: opts }
     if (typeof opts === 'function') return that.createWriteStream(null, opts)
 
     var ws = new Writer(dir, algo, init)
     if (!cb) return ws
 
-    eos(ws, function(err) {
+    eos(ws, function (err) {
       if (err) return cb(err)
       cb(null, {
         key: ws.key,
@@ -125,34 +125,34 @@ module.exports = function(opts) {
     return ws
   }
 
-  that.createReadStream = function(opts) {
-    if (typeof opts === 'string') opts = {key:opts}
+  that.createReadStream = function (opts) {
+    if (typeof opts === 'string') opts = { key: opts }
     return fs.createReadStream(toPath(dir, opts.key || opts.hash), opts)
   }
 
-  that.exists = function(opts, cb) {
-    if (typeof opts === 'string') opts = {key:opts}
-    fs.stat(toPath(dir, opts.key), function(err, stat) {
+  that.exists = function (opts, cb) {
+    if (typeof opts === 'string') opts = { key: opts }
+    fs.stat(toPath(dir, opts.key), function (err, stat) {
       if (err && err.code === 'ENOENT') return cb(null, false)
       if (err) return cb(err)
       cb(null, true)
     })
   }
 
-  that.remove = function(opts, cb) {
+  that.remove = function (opts, cb) {
     if (!cb) cb = noop
-    if (typeof opts === 'string') opts = {key:opts}
-    fs.unlink(toPath(dir, opts.key), function(err) {
+    if (typeof opts === 'string') opts = { key: opts }
+    fs.unlink(toPath(dir, opts.key), function (err) {
       if (err && err.code === 'ENOENT') return cb(null, false)
       if (err) return cb(err)
       cb(null, true)
     })
   }
 
-  that.resolve = function(opts, cb) {
-    if (typeof opts === 'string') opts = {key:opts}
+  that.resolve = function (opts, cb) {
+    if (typeof opts === 'string') opts = { key: opts }
     var path = toPath(dir, opts.key)
-    fs.stat(path, function(err, stat) {
+    fs.stat(path, function (err, stat) {
       if (err && err.code === 'ENOENT') return cb(null, false, null)
       if (err) return cb(err)
       cb(null, path, stat)

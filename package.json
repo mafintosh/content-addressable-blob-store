@@ -6,17 +6,20 @@
   "dependencies": {
     "end-of-stream": "^1.0.0",
     "mkdirp": "^0.5.0",
-    "readable-stream": "^1.0.31",
-    "thunky": "^0.1.0"
+    "readable-stream": "^3.4.0",
+    "thunky": "^1.0.3"
   },
   "devDependencies": {
-    "abstract-blob-store": "^3.2.0",
-    "concat-stream": "^1.4.6",
+    "abstract-blob-store": "^3.3.5",
+    "concat-stream": "^2.0.0",
     "rimraf": "^2.2.8",
-    "tape": "^2.13.4"
+    "standard": "^13.1.0",
+    "standard-markdown": "^5.1.0",
+    "tape": "^4.11.0"
   },
   "scripts": {
-    "test": "tape test.js"
+    "test": "tape test.js",
+    "lint": "standard ; standard-markdown README.md"
   },
   "repository": {
     "type": "git",
