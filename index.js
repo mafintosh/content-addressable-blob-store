@@ -55,7 +55,6 @@ Writer.prototype._setup = function (data, enc, cb) {
     self._tmp = path.join(dir, Date.now() + '-' + Math.random().toString().slice(2))
     self._ws = fs.createWriteStream(self._tmp)
     self._ws.on('error', destroy)
-    self._ws.on('close', destroy)
     self._write(data, enc, cb)
   })
 }

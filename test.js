@@ -88,3 +88,24 @@ test('resolve blob', function (t) {
     })
   })
 })
+
+
+test('error handing', function (t) {
+  common.setup(t, function (err, store) {
+    t.ifError(err, 'no error')
+    var w = store.createWriteStream()
+    w.on('error', function (err) {
+      t.equal(err.message, 'A fake error')
+      t.true(w.destroyed === true)
+      common.teardown(t, null, null, function (err) {
+        t.ifError(err, 'no error')
+        t.end()
+      })
+    })
+    w.write('hello')
+    w.write('world')
+    setTimeout(function () {
+      w._ws.destroy(new Error('A fake error'))
+    }, 100)
+  })
+})
