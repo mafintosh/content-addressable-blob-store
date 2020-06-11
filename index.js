@@ -24,7 +24,7 @@ var Writer = function (dir, algo, init) {
   this._tmp = null
   this._ws = null
   this._directory = dir
-  this._digest = crypto.createHash(algo)
+  this._digest = typeof algo === 'function' ? algo() : crypto.createHash(algo)
   this._init = init
 
   stream.Writable.call(this)
